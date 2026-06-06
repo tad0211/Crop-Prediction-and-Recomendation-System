@@ -1,0 +1,47 @@
+CROP YIELD PREDICTION & RECOMMENDATION SYSTEM - PROJECT OVERVIEW
+
+=========================================
+1. WHAT TECHNOLOGIES ARE USED IN THE PROJECT?
+=========================================
+
+The project is split into three main parts: data/machine learning, the backend server, and the frontend user website.
+
+A. DATA & MACHINE LEARNING (Python)
+- Pandas and NumPy: Used to load and clean the crop dataset (which contains information about soil, weather, region, crops, and yield).
+- Scikit-Learn: The core library used to build the AI models:
+  * Crop Recommendation Classifier: Predicts the best type of crop to plant based on soil and weather conditions.
+  * Yield Regressor: Predicts how many tons of crop will be harvested per hectare.
+  * Label Encoders: Used to convert text data (like regions or soil types) into numbers that the AI can understand.
+- Joblib: Saves the trained AI models as ".pkl" files on your computer so they can be loaded instantly without retraining.
+- Matplotlib & Seaborn: Used to create graphs that show which factors (like rainfall or temperature) are most important for crop growth.
+
+B. BACKEND SERVER (Flask)
+- Flask (Python): A lightweight web server that runs in the background. It loads the saved AI models and waits for requests.
+- Flask-CORS: Allows the website pages to safely talk to the backend server.
+- Endpoints (Server Paths):
+  * /predict: Takes environmental factors and returns the top 3 recommended crops, the confidence percentage, and the predicted yield.
+  * /model-stats: Returns the accuracy scores of the models.
+  * /crops: Returns descriptions and details about the crops.
+
+C. FRONTEND WEBSITE (HTML, CSS, JavaScript)
+- HTML: Builds the structure of the website.
+- CSS: Styles the website with a modern green and lime theme, nice borders, and smooth buttons.
+- JavaScript: Handles user interaction. When you change sliders (for rainfall, temperature, etc.) and click predict, it sends the data to the Flask server, gets the prediction, and updates the screen.
+- Chart.js: Renders interactive charts, gauge meters, and confidence circles on the website.
+
+=========================================
+2. HOW DOES THE PROJECT WORK? (WORKFLOW)
+=========================================
+
+Step 1: TRAINING THE MODELS
+First, the training script (train_model.py) reads the raw data from your crop_yield.csv file. It trains the two AI models (one for crop type and one for yield) and saves them as files in the "model/saved_model" folder.
+
+Step 2: RUNNING THE SERVER
+When you start the backend server (app.py), it loads those saved model files. The server stays running and listens for requests on your computer at http://localhost:5000.
+
+Step 3: INTERACTING ON THE WEBSITE
+When you open the website files in your browser:
+- If you go to the Predict page (predict.html) and use the sliders to set temperature, rainfall, etc., and click "Predict", the website sends that information to the Flask server.
+- The Flask server runs the data through the AI models and sends back the crop recommendation and expected yield.
+- The website displays this instantly using visual charts and gauges.
+- If you go to the Dashboard page (dashboard.html), it fetches the statistics from the server and renders feature importances and heatmaps to show you how the models perform.

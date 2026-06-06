@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Crop & Yield - CropIntel AI</title>
+    <meta name="description" content="Use our Random Forest dual model predictor to recommendations crops and predict crop yield output in tons per hectare.">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Leaflet Map CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo" id="nav-logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>CropIntel AI</span>
+            </a>
+            <div class="nav-right">
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="index.html" class="nav-item" id="link-home">Home</a></li>
+                    <li><a href="predict.html" class="nav-item active" id="link-predict">Predict Crop</a></li>
+                    <li><a href="dashboard.html" class="nav-item" id="link-dashboard">Analytics Dashboard</a></li>
+                </ul>
+                <button type="button" class="theme-toggle-btn" id="theme-toggle" title="Toggle dark/light mode">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <div class="nav-toggle" id="nav-toggle">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="section-title">
+            <h2>Crop Recommendation & Yield Predictor</h2>
+            <p>Fill out the parameters below to trigger our dual Machine Learning model prediction.</p>
+        </div>
+
+        <div class="predict-layout">
+            <!-- LEFT: INPUT FORM CARD -->
+            <div class="predict-card">
+                <form id="prediction-form">
+                    
+                    <!-- Region & Soil Type (Row) -->
+                    <div class="form-group-row">
+                        <div class="form-group">
+                            <label for="region">
+                                <span><i class="fa-solid fa-earth-americas"></i> Region</span>
+                            </label>
+                            <div class="region-select-wrap">
+                                <select id="region" class="form-select" required>
+                                    <option value="North">North</option>
+                                    <option value="South">South</option>
+                                    <option value="East">East</option>
+                                    <option value="West">West</option>
+                                </select>
+                                <button type="button" class="btn-map-select" id="btn-open-map" title="Choose region from Map of India">
+                                    <i class="fa-solid fa-map-location-dot"></i>
+                                    <span>Choose from Map</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="soil_type">
+                                <span><i class="fa-solid fa-mountain"></i> Soil Type</span>
+                            </label>
+                            <select id="soil_type" class="form-select" required>
+                                <option value="Loam">Loam</option>
+                                <option value="Sandy">Sandy</option>
+                                <option value="Clay">Clay</option>
+                                <option value="Silt">Silt</option>
+                                <option value="Peaty">Peaty</option>
+                                <option value="Chalky">Chalky</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Rainfall Input -->
+                    <div class="form-group">
+                        <div class="input-header">
+                            <label for="rainfall_mm">
+                                <span><i class="fa-solid fa-cloud-showers-water"></i> Annual Rainfall</span>
+                            </label>
+                            <button type="button" class="input-toggle-btn" id="toggle-rainfall" data-target="rainfall" data-mode="slider">
+                                <i class="fa-solid fa-keyboard"></i>
+                                <span>Manual Entry</span>
+                            </button>
+                        </div>
+                        <div class="slider-container" id="rainfall-slider-container">
+                            <input type="range" id="rainfall_mm" class="form-slider" min="100" max="1000" step="10" value="550">
+                            <span style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-top: 5px;"><span id="val-rainfall" class="val-display">550</span> mm</span>
+                        </div>
+                        <div class="manual-container hidden" id="rainfall-manual-container">
+                            <input type="number" id="rainfall_mm_manual" class="form-number-input" min="100" max="1000" step="10" value="550">
+                            <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 5px;">Range: 100 - 1000 mm</span>
+                        </div>
+                    </div>
+
+                    <!-- Temperature Input -->
+                    <div class="form-group">
+                        <div class="input-header">
+                            <label for="temperature">
+                                <span><i class="fa-solid fa-temperature-half"></i> Temperature</span>
+                            </label>
+                            <button type="button" class="input-toggle-btn" id="toggle-temp" data-target="temp" data-mode="slider">
+                                <i class="fa-solid fa-keyboard"></i>
+                                <span>Manual Entry</span>
+                            </button>
+                        </div>
+                        <div class="slider-container" id="temp-slider-container">
+                            <input type="range" id="temperature" class="form-slider" min="8" max="44" step="0.5" value="26.0">
+                            <span style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-top: 5px;"><span id="val-temp" class="val-display">26.0</span> °C</span>
+                        </div>
+                        <div class="manual-container hidden" id="temp-manual-container">
+                            <input type="number" id="temperature_manual" class="form-number-input" min="8" max="44" step="0.1" value="26.0">
+                            <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 5px;">Range: 8 - 44 °C</span>
+                        </div>
+                    </div>
+
+                    <!-- Days to Harvest Input -->
+                    <div class="form-group">
+                        <div class="input-header">
+                            <label for="days_to_harvest">
+                                <span><i class="fa-solid fa-calendar-check"></i> Days to Harvest</span>
+                            </label>
+                            <button type="button" class="input-toggle-btn" id="toggle-days" data-target="days" data-mode="slider">
+                                <i class="fa-solid fa-keyboard"></i>
+                                <span>Manual Entry</span>
+                            </button>
+                        </div>
+                        <div class="slider-container" id="days-slider-container">
+                            <input type="range" id="days_to_harvest" class="form-slider" min="60" max="150" step="1" value="105">
+                            <span style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-top: 5px;"><span id="val-days" class="val-display">105</span> days</span>
+                        </div>
+                        <div class="manual-container hidden" id="days-manual-container">
+                            <input type="number" id="days_to_harvest_manual" class="form-number-input" min="60" max="150" step="1" value="105">
+                            <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 5px;">Range: 60 - 150 days</span>
+                        </div>
+                    </div>
+
+                    <!-- Fertilizer & Irrigation Toggles (Row) -->
+                    <div class="form-group-row">
+                        <div class="toggle-group">
+                            <div class="toggle-label-wrap">
+                                <strong>Fertilizer Used</strong>
+                                <span>Organic or chemical inputs</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="fertilizer_used" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="toggle-group">
+                            <div class="toggle-label-wrap">
+                                <strong>Irrigation Used</strong>
+                                <span>Artificial water supply</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="irrigation_used" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Weather Condition Selector -->
+                    <div class="form-group">
+                        <label>
+                            <span><i class="fa-solid fa-cloud-sun"></i> Weather Condition</span>
+                        </label>
+                        <input type="hidden" id="weather_condition" value="Rainy" required>
+                        <div class="weather-selector">
+                            <button type="button" class="weather-btn" data-value="Cloudy">
+                                <span class="emoji">☁️</span>
+                                <span>Cloudy</span>
+                            </button>
+                            <button type="button" class="weather-btn active" data-value="Rainy">
+                                <span class="emoji">🌧️</span>
+                                <span>Rainy</span>
+                            </button>
+                            <button type="button" class="weather-btn" data-value="Sunny">
+                                <span class="emoji">☀️</span>
+                                <span>Sunny</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-submit" id="btn-predict">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Analyze & Predict</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- RIGHT: RESULTS DISPLAY CARD -->
+            <div class="results-card">
+                
+                <!-- State 1: Placeholder before submit -->
+                <div class="placeholder-results" id="placeholder-results">
+                    <i class="fa-solid fa-seedling"></i>
+                    <h3>Ready for Prediction</h3>
+                    <p>Adjust parameters on the left and click "Analyze & Predict" to view model evaluations.</p>
+                </div>
+
+                <!-- State 2: Loader Spinner -->
+                <div class="loader-container" id="loader-container">
+                    <div class="loading-spinner"></div>
+                    <h3>Running Dual ML Models...</h3>
+                    <p>Querying Random Forest Classifier and Regressor</p>
+                </div>
+
+                <!-- State 3: Rendered Results -->
+                <div class="prediction-results" id="prediction-results">
+                    
+                    <!-- Recommendation Badge -->
+                    <div class="badge-recommendation">
+                        <span id="recommended-emoji" class="emoji">🌾</span>
+                        <div style="text-align: left;">
+                            <h4>Recommended Crop</h4>
+                            <h3 id="recommended-crop">Wheat</h3>
+                        </div>
+                    </div>
+
+                    <!-- Graphs Row -->
+                    <div class="charts-row">
+                        <!-- Doughnut Confidence Ring -->
+                        <div class="chart-box">
+                            <h4>Confidence Spread</h4>
+                            <div class="chart-canvas-wrap">
+                                <canvas id="confidenceChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- semicircle Yield Gauge -->
+                        <div class="chart-box">
+                            <h4>Predicted Yield</h4>
+                            <div class="gauge-canvas-wrap">
+                                <canvas id="yieldGauge"></canvas>
+                                <div class="yield-display-val">
+                                    <span class="val" id="yield-val">5.32</span>
+                                    <span class="unit">tons/ha</span>
+                                </div>
+                            </div>
+                            <span class="category-badge good" id="yield-badge">Good ✅</span>
+                        </div>
+                    </div>
+
+                    <!-- Top 3 Probabilities Progress List -->
+                    <div class="top3-list">
+                        <h4>Top 3 Recommended Crops</h4>
+                        <div id="top3-progress-list">
+                            <!-- Injected dynamically via JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>CropIntel AI</span>
+            </div>
+            <div class="footer-links">
+                <a href="index.html" class="footer-link">Home</a>
+                <a href="predict.html" class="footer-link">Predict Crop</a>
+                <a href="dashboard.html" class="footer-link">Model Dashboard</a>
+            </div>
+        </div>
+        <div class="footer-copy">
+            <p>&copy; 2026 CropIntel AI. Developed with Google DeepMind Antigravity Pair-Programming. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Map of India Modal Overlay -->
+    <div class="map-modal-overlay" id="map-modal">
+        <div class="map-modal-content" style="max-width: 550px;">
+            <div class="map-modal-close" id="btn-close-map">&times;</div>
+            <h3>Select Region from India Map</h3>
+            <p>Click on one of the highlighted regions (circles) representing North, South, East, and West agricultural zones on the map of India.</p>
+            
+            <div id="india-map" style="width: 100%; height: 380px; border-radius: 12px; margin-top: 15px; border: 1px solid #CFD8DC; z-index: 1;"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+</body>
+</html>

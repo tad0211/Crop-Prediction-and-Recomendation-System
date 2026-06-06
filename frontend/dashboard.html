@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Performance Dashboard - CropIntel AI</title>
+    <meta name="description" content="Explore live metrics, validation scores, and Random Forest feature importances for our Crop Recommendation and Yield Prediction models.">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo" id="nav-logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>CropIntel AI</span>
+            </a>
+            <div class="nav-right">
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="index.html" class="nav-item" id="link-home">Home</a></li>
+                    <li><a href="predict.html" class="nav-item" id="link-predict">Predict Crop</a></li>
+                    <li><a href="dashboard.html" class="nav-item active" id="link-dashboard">Analytics Dashboard</a></li>
+                </ul>
+                <button type="button" class="theme-toggle-btn" id="theme-toggle" title="Toggle dark/light mode">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <div class="nav-toggle" id="nav-toggle">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="section-title">
+            <h2>Model Analytics & Performance</h2>
+            <p>Live metrics and feature importances extracted from our Random Forest models trained on 200,000 samples.</p>
+        </div>
+
+        <!-- Row 1: Stat Cards -->
+        <div class="dashboard-grid">
+            
+            <!-- Card 1: Classifier Accuracy -->
+            <div class="metric-card" id="card-accuracy">
+                <div class="metric-icon">
+                    <i class="fa-solid fa-bullseye"></i>
+                </div>
+                <div class="metric-details">
+                    <h3 id="stat-accuracy">--%</h3>
+                    <p>Classifier Accuracy</p>
+                </div>
+            </div>
+
+            <!-- Card 2: Regressor R² -->
+            <div class="metric-card" id="card-r2">
+                <div class="metric-icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div class="metric-details">
+                    <h3 id="stat-r2">-.----</h3>
+                    <p>Regressor R² Score</p>
+                </div>
+            </div>
+
+            <!-- Card 3: Regressor RMSE -->
+            <div class="metric-card" id="card-rmse">
+                <div class="metric-icon">
+                    <i class="fa-solid fa-square-root-variable"></i>
+                </div>
+                <div class="metric-details">
+                    <h3 id="stat-rmse">-.----</h3>
+                    <p>Regressor RMSE</p>
+                </div>
+            </div>
+
+            <!-- Card 4: Total Crops Supported -->
+            <div class="metric-card" id="card-crops">
+                <div class="metric-icon">
+                    <i class="fa-solid fa-wheat-awn"></i>
+                </div>
+                <div class="metric-details">
+                    <h3 id="stat-crops">6</h3>
+                    <p>Supported Crops</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Row 2: Charts Grid -->
+        <div class="vis-grid">
+            
+            <!-- Chart 1: Feature Importance (Grouped horizontal bars) -->
+            <div class="vis-card span-2">
+                <h3>
+                    <span><i class="fa-solid fa-bars-staggered"></i> Feature Importance Comparison</span>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal;">Dual Model Comparison</span>
+                </h3>
+                <div class="chart-wrapper">
+                    <canvas id="featureImportanceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 2: Crop Distribution in Dataset -->
+            <div class="vis-card">
+                <h3>
+                    <span><i class="fa-solid fa-chart-pie"></i> Crop Balance in Dataset</span>
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </h3>
+                <div class="chart-wrapper">
+                    <canvas id="cropDistributionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 3: Yield Ranges by Crop -->
+            <div class="vis-card">
+                <h3>
+                    <span><i class="fa-solid fa-chart-bar"></i> Yield Ranges by Crop Variety</span>
+                    <i class="fa-solid fa-circle-info"></i>
+                </h3>
+                <div class="chart-wrapper">
+                    <canvas id="yieldRangeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Heatmap: Weather vs Yield -->
+            <div class="vis-card span-2">
+                <h3>
+                    <span><i class="fa-solid fa-border-all"></i> Weather Condition vs Crop Yield Heatmap</span>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal;">Average Yield (tons/ha)</span>
+                </h3>
+                
+                <!-- Custom Heatmap Grid -->
+                <div class="heatmap-container">
+                    <!-- Y Axis Labels (Weather) -->
+                    <div class="heatmap-y-labels">
+                        <div>☁️ Cloudy</div>
+                        <div>🌧️ Rainy</div>
+                        <div>☀️ Sunny</div>
+                    </div>
+                    
+                    <!-- Grid of Heatmap cells (populates dynamically via JS) -->
+                    <div class="heatmap-grid-wrap" id="heatmap-grid">
+                        <!-- Rows injected via JS -->
+                    </div>
+                </div>
+
+                <!-- X Axis Labels (Crops) -->
+                <div class="heatmap-x-labels">
+                    <div></div> <!-- spacing for y axis labels -->
+                    <div>Wheat</div>
+                    <div>Rice</div>
+                    <div>Soybean</div>
+                    <div>Barley</div>
+                    <div>Maize</div>
+                    <div>Cotton</div>
+                </div>
+
+                <!-- Legend -->
+                <div class="heatmap-legend">
+                    <span>Low Yield (3.0 tons/ha)</span>
+                    <div class="legend-bar"></div>
+                    <span>High Yield (8.0 tons/ha)</span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>CropIntel AI</span>
+            </div>
+            <div class="footer-links">
+                <a href="index.html" class="footer-link">Home</a>
+                <a href="predict.html" class="footer-link">Predict Crop</a>
+                <a href="dashboard.html" class="footer-link">Model Dashboard</a>
+            </div>
+        </div>
+        <div class="footer-copy">
+            <p>&copy; 2026 CropIntel AI. Developed with Google DeepMind Antigravity Pair-Programming. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+</body>
+</html>

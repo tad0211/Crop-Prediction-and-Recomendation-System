@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Crop Intel - Predict, Plan, Profit</title>
+    <meta name="description" content="AI-Powered Crop Intelligence System using Random Forest. Predict crop recommendations, estimate yield in tons per hectare, and optimize agricultural success.">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo" id="nav-logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>CropIntel AI</span>
+            </a>
+            <div class="nav-right">
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="index.html" class="nav-item active" id="link-home">Home</a></li>
+                    <li><a href="predict.html" class="nav-item" id="link-predict">Predict Crop</a></li>
+                    <li><a href="dashboard.html" class="nav-item" id="link-dashboard">Analytics Dashboard</a></li>
+                </ul>
+                <button type="button" class="theme-toggle-btn" id="theme-toggle" title="Toggle dark/light mode">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <div class="nav-toggle" id="nav-toggle">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="hero-section">
+            <!-- Animated SVG Background -->
+            <svg class="hero-svg-bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 500" preserveAspectRatio="none">
+                <style>
+                    /* Sun Ray Animation */
+                    .sun-ray {
+                        transform-origin: 1200px 100px;
+                        animation: rotateSun 60s linear infinite;
+                        fill: rgba(255, 235, 59, 0.08);
+                    }
+                    /* Rain animation */
+                    .rain-drop {
+                        animation: fallRain 3s linear infinite;
+                        stroke: rgba(164, 243, 115, 0.2);
+                        stroke-width: 2;
+                    }
+                    .drop-1 { animation-delay: 0s; left: 10%; }
+                    .drop-2 { animation-delay: 0.8s; }
+                    .drop-3 { animation-delay: 1.5s; }
+                    .drop-4 { animation-delay: 2.2s; }
+                    
+                    @keyframes rotateSun {
+                        from { transform: rotate(0deg); }
+                        to { transform: rotate(360deg); }
+                    }
+                    @keyframes fallRain {
+                        0% { transform: translateY(-50px) translateX(0px); opacity: 0; }
+                        50% { opacity: 0.8; }
+                        100% { transform: translateY(450px) translateX(-30px); opacity: 0; }
+                    }
+                </style>
+                <!-- Sun representation -->
+                <circle cx="1200" cy="100" r="80" fill="rgba(255, 235, 59, 0.1)" />
+                <path class="sun-ray" d="M1200,100 L0,0 M1200,100 L0,250 M1200,100 L0,500 M1200,100 L720,500 M1200,100 L1440,500 M1200,100 L1440,250 M1200,100 L720,0" />
+                
+                <!-- Rain drops -->
+                <line class="rain-drop" x1="200" y1="50" x2="190" y2="90" style="animation-delay: 0.2s; animation-duration: 2.5s;" />
+                <line class="rain-drop" x1="450" y1="30" x2="440" y2="70" style="animation-delay: 1.2s; animation-duration: 2.8s;" />
+                <line class="rain-drop" x1="700" y1="80" x2="690" y2="120" style="animation-delay: 0.5s; animation-duration: 2.2s;" />
+                <line class="rain-drop" x1="950" y1="40" x2="940" y2="80" style="animation-delay: 1.8s; animation-duration: 3.1s;" />
+                <line class="rain-drop" x1="150" y1="200" x2="140" y2="240" style="animation-delay: 0.9s; animation-duration: 2.4s;" />
+                <line class="rain-drop" x1="600" y1="180" x2="590" y2="220" style="animation-delay: 2.1s; animation-duration: 2.7s;" />
+                
+                <!-- Crop silhouettes on the ground -->
+                <path d="M 0,500 Q 150,480 300,500 T 600,500 T 900,500 T 1200,500 T 1440,500 L 1440,500 L 0,500 Z" fill="rgba(118, 196, 66, 0.15)" />
+                <path d="M 50,500 L 50,440 Q 60,430 70,450 L 50,500" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3" />
+                <path d="M 250,500 L 250,430 Q 265,420 280,440 L 250,500" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3" />
+                <path d="M 850,500 L 850,420 Q 860,410 870,430 L 850,500" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3" />
+            </svg>
+
+            <!-- Hero Text Content -->
+            <div class="hero-content">
+                <h1>AI-Powered Crop Intelligence — Predict, Plan, Profit</h1>
+                <p>Maximize your agricultural yield and lower risk. Our state-of-the-art dual Machine Learning models analyze climate parameters, soil features, and harvest timelines to recommend the perfect crop and predict yield output.</p>
+                <a href="predict.html" class="hero-cta" id="btn-hero-start">
+                    <span>Start Predicting</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+                
+                <!-- Stats Row -->
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-val">1M+</span>
+                        <span class="stat-lbl">Data Points</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-val">6 Crops</span>
+                        <span class="stat-lbl">Varieties</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-val">Dual AI</span>
+                        <span class="stat-lbl">RF Models</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-val">99%+</span>
+                        <span class="stat-lbl">Accuracy</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Visual Area -->
+            <div class="hero-visual">
+                <!-- SVG Illustration of Agriculture/Technology -->
+                <svg viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Leaf background -->
+                    <path d="M250,50 C350,150 350,300 250,350 C150,300 150,150 250,50 Z" fill="rgba(118, 196, 66, 0.2)" />
+                    <!-- Sprout -->
+                    <path d="M250,350 L250,150" stroke="#76C442" stroke-width="12" stroke-linecap="round" />
+                    <path d="M250,230 C280,210 320,210 340,230 C340,230 310,270 250,250" fill="#76C442" />
+                    <path d="M250,180 C210,150 170,160 150,190 C150,190 185,220 250,200" fill="#1B5E20" />
+                    <!-- Technology Ring -->
+                    <circle cx="250" cy="230" r="110" stroke="#ffffff" stroke-width="4" stroke-dasharray="10 15" />
+                    <circle cx="250" cy="230" r="140" stroke="#76C442" stroke-width="2" stroke-dasharray="5 10" />
+                    <!-- Nodes -->
+                    <circle cx="140" cy="230" r="12" fill="#1B5E20" />
+                    <path d="M140,230 L135,225" stroke="#fff" stroke-width="2" />
+                    <circle cx="360" cy="230" r="12" fill="#76C442" />
+                    <circle cx="250" cy="120" r="12" fill="#1B5E20" />
+                    <circle cx="250" cy="340" r="12" fill="#76C442" />
+                </svg>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features-section">
+            <div class="section-title">
+                <h2>Agricultural Intelligence Features</h2>
+                <p>Harness the power of Machine Learning to automate key farming decisions and mitigate crop failures.</p>
+            </div>
+            
+            <div class="feature-grid">
+                <!-- Feature 1: Crop Recommendation -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-wheat-awn"></i>
+                    </div>
+                    <h3>Crop Recommendation</h3>
+                    <p>Our Random Forest Classifier recommends the ideal crop type (Wheat, Rice, Barley, Soybean, Maize, or Cotton) based on your region, soil, and climate parameters.</p>
+                </div>
+                
+                <!-- Feature 2: Yield Prediction -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3>Yield Prediction</h3>
+                    <p>Estimates precise crop yield in tons per hectare utilizing our Random Forest Regressor, giving you insight into potential revenue before planting.</p>
+                </div>
+                
+                <!-- Feature 3: Soil Adaptability -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <h3>Soil Analysis</h3>
+                    <p>Matches clayey, peaty, loamy, sandy, silty, and chalky soil qualities to optimal crops, guaranteeing maximum root health and productivity.</p>
+                </div>
+                
+                <!-- Feature 4: Climate Matching -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-cloud-sun-rain"></i>
+                    </div>
+                    <h3>Climate Matching</h3>
+                    <p>Calculates precise matches with rainfall, temperature levels, and weather forecasts (Cloudy/Rainy/Sunny) to prevent environmental shock.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>CropIntel AI</span>
+            </div>
+            <div class="footer-links">
+                <a href="index.html" class="footer-link">Home</a>
+                <a href="predict.html" class="footer-link">Predict Crop</a>
+                <a href="dashboard.html" class="footer-link">Model Dashboard</a>
+            </div>
+        </div>
+        <div class="footer-copy">
+            <p>&copy; 2026 CropIntel AI. Developed with Google DeepMind Antigravity Pair-Programming. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+</body>
+</html>

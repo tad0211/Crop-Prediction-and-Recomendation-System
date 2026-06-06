@@ -1,0 +1,47 @@
+{
+    "classifier_accuracy": 0.167425,
+    "regressor_r2": 0.9114906942910721,
+    "regressor_rmse": 0.5054091913539269,
+    "feature_importances": [
+        {
+            "feature": "Region",
+            "classifier_importance": 0.06702065281370202,
+            "regressor_importance": 0.0007850232249855739
+        },
+        {
+            "feature": "Soil_Type",
+            "classifier_importance": 0.08622844558669084,
+            "regressor_importance": 0.001073461949784796
+        },
+        {
+            "feature": "Rainfall_mm",
+            "classifier_importance": 0.26658329822350174,
+            "regressor_importance": 0.6380552261405303
+        },
+        {
+            "feature": "Temperature_Celsius",
+            "classifier_importance": 0.2734506577656686,
+            "regressor_importance": 0.012095108344440567
+        },
+        {
+            "feature": "Fertilizer_Used",
+            "classifier_importance": 0.031972043215125395,
+            "regressor_importance": 0.2091460247487497
+        },
+        {
+            "feature": "Irrigation_Used",
+            "classifier_importance": 0.03326609900897348,
+            "regressor_importance": 0.1353568086083146
+        },
+        {
+            "feature": "Weather_Condition",
+            "classifier_importance": 0.05276306820901896,
+            "regressor_importance": 0.0005723472606122753
+        },
+        {
+            "feature": "Days_to_Harvest",
+            "classifier_importance": 0.18871573517731907,
+            "regressor_importance": 0.002915999722582181
+        }
+    ]
+}

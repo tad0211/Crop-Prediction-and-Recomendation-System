@@ -1,0 +1,9 @@
+# 1. Activate the environment
+.venv\Scripts\Activate.ps1
+
+# 2. Start the backend server
+python backend/app.py
+
+
+# Open the website in your default browser
+start frontend/index.html
